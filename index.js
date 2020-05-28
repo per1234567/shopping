@@ -258,6 +258,7 @@ class Main{
             DBAccess.saveProduct(data);
             WebScraper.scrapeImage(data.name, data.category);
         } else {
+            
             //If such a product exists but is removed, bring it back
             if(product[0].visible === false){
                 this.sendData(`addProduct${data.category}`, data);
