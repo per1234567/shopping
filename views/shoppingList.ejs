@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping List</title>
+    <link rel = "stylesheet" type = "text/css" href = "/css/shoppingListStyle.css">
+    <script src = '/socket.io/socket.io.js'></script>
+</head>
+<body style = 'margin:0'>
+    <input id = 'toDirectory' onclick = 'location.href = "./directory/"' type = 'submit' value = 'D'>
+    <div id = 'content'>
+        <ul id = 'products'>
+            <% products.forEach(product => { %>
+            <% if(product.taken === true){ %>
+                <li class = 'product taken' name = '<%=product.name%>' unit = '<%=product.unit%>'>
+            <% } else { %>
+                <li class = 'product' name = '<%=product.name%>' unit = '<%=product.unit%>'>
+            <% } %>
+                <span id = 'text'><%= product.name %></span>
+                <div id = parameterContainer>
+                    <div id = 'loading'></div>
+                    <span id = 'parameters'><%=product.quantity%> <%=product.unit%></span>
+                </div>
+            </li>
+            <% }); %>
+        </ul>
+        <div id = 'bulkActions'>
+            <div id = 'bulkActionSection'>
+                <div id = 'bulkActionLoading'></div>
+                <input id = 'removeTaken' type = 'submit' value = '-'>
+            </div>
+            <div id = 'bulkActionSection'>
+                <div id = 'bulkActionLoading'></div>
+                <input id = 'removeAll' type = 'submit' value = 'X'>
+            </div>
+        </div>
+        <span style = 'visibility: hidden;'>a</span>
+    </div>
+<script src = "../shoppingList.js"></script>
+</body>
+
+</html>

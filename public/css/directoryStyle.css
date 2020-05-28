@@ -1,0 +1,194 @@
+*{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 30px;
+}
+
+#content{
+    overflow: auto;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+
+    height: 100%;
+    width: 80vw; max-width: 510px;
+}
+
+#categories li{
+    border-top: none;
+}
+
+#categories li:nth-child(odd){
+    border-right: none;
+}
+
+#categories li:last-child{
+    margin-bottom: 40px;
+    border: 2px black solid;
+    border-top: none;
+}
+
+#categories li:nth-child(-n+2){
+    border-top: 2px black solid;
+}
+
+#categories:first-child{
+    border-right: 2px black solid;
+}
+
+#content::-webkit-scrollbar {
+    display : none;
+}
+
+.block{
+    position: relative;
+    float : left;
+    overflow: hidden;
+
+    height: 40vw; max-height: 250px;
+    width: 40vw; max-width: 250px;
+
+    border: 2px black solid;
+    background-color: white;
+    box-sizing: border-box;
+
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.text{
+    position: absolute;
+    text-align: center;
+    width: 180px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    background-color: rgba(255, 255, 255, 0.7);
+    border:2px black solid;
+
+    user-select: none;
+    pointer-events: none;
+}
+
+#topContainer{
+    text-align: center;
+
+    height: 80px; 
+    width: 80vw; max-width: 500px;
+    margin-bottom: 10px;
+}
+
+#addCategory{
+    height: 80px;
+    width: 80px;
+
+    border:2px black solid;
+    background-color: ghostwhite;
+}
+
+#addCategory:hover{
+    background-color: rgb(230, 230, 230);
+}
+
+#addCategory:active{
+    background-color: rgb(210,210,210);
+}
+
+ul{
+    padding: 0;
+    list-style-type: none;
+}
+
+.button{
+    float: right;
+
+    width: 60px;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+#inputWindow{
+    position: absolute;
+    top: 20vh;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: fixed;
+
+    height: 60px;
+    width: 90vw; max-width: 600px;
+
+    border: 1200px rgba(255, 255, 255, 0.7) solid;
+    background-color: ghostwhite;
+    background-clip: padding-box;
+
+    display: none;
+}
+
+#errorMessage{
+    height: 60px;
+    width: 80vw; max-width: 510px;
+
+    text-align: center;
+    line-height: 60px;
+    margin: 10px 0;
+
+    box-sizing: border-box;
+    border: 2px black solid;
+    background-color: orangered;   
+
+    visibility: hidden;
+}
+
+#errorMessage.visible{
+    visibility: visible;
+}
+
+#hideWindow{
+    height: 60px;
+    background-color: ghostwhite;
+    border:1px grey solid;
+    box-sizing: border-box;
+}
+
+#hideWindow:hover{
+    background-color: rgb(230, 230, 230);
+}
+
+#hideWindow:active{
+    background-color: rgb(210,210,210);
+}
+
+#textInput{
+    padding: 0 10px;
+    position: fixed;
+
+    height: 60px;
+    width: calc(90vw - 60px); max-width: 90%;
+
+    box-sizing: border-box;
+    border:1px grey solid;
+}
+
+#loading{
+    pointer-events: none;
+    position: absolute;
+
+    left: -250px;
+    height: 250px;
+    width: 250px;
+
+    background-color: rgba(50, 50, 50, 0.7);
+    transition: 3s;
+}
+
+.clicked #loading{
+    transition: 3s;
+    left: 0;
+}
+
+:focus{
+    outline: 0;
+}

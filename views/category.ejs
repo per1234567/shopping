@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%=category%></title>
+    <link rel = "stylesheet" type = "text/css" href = "/css/categoryStyle.css">
+    <script src = '/socket.io/socket.io.js'></script>
+</head>
+<body style = 'margin:0'>
+
+    <div id = 'sidebar' onclick = 'location.href = "/"'></div>
+    
+    <div id = 'inputWindow'>
+        <input id = 'hideWindow' class = 'button' type = 'submit' value = 'X'>
+        <input id = 'toggleDropdown' class = 'button' type = 'submit' value = 'select unit'>
+        <input id = 'textInput' type = "text">
+        <ul id = dropdownMenu>
+        </ul>
+    </div>
+    
+    <div id = 'content'>
+        <div id = 'errorMessage'></div>
+        <div id = 'topContainer'>
+            <input id = 'addProduct' type = 'submit' value = '+'>
+        </div>
+        <ul id = 'products'>
+        <% products.forEach(product => { %>
+            <% if(product.imageSource){ %>
+                <li class = 'block' 
+                    name = '<%=product.name%>' quantity = '<%=product.quantity%>' unit = '<%=product.unit%>'
+                    style = 'background-image: url("<%=product.imageSource%>");'>
+            <% } else { %>
+                <li class = 'block' 
+                    name = '<%=product.name%>' quantity = '<%=product.quantity%>' unit = '<%=product.unit%>'>
+            <% } %>
+            <div id = 'loading'></div>
+            <div id = 'blockCenter'>
+                <span class = 'topText' name = '<%=product.name%>'><%=product.name%></span>
+                <span class = 'bottomText' name = '<%=product.name%>'><%=product.quantity%> <%=product.unit%></span>
+            </div>
+            </li>
+        <% }); %>
+        </ul>
+    </div>
+<script src = "../category.js"></script>
+</body>
+
+</html>
