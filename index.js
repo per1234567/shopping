@@ -350,22 +350,24 @@ class Main{
 
 //This class handles finding images online
 class WebScraper{
+
     //Use Google's custom search API to find an image
     static async findImage(name, category, imageIndex){
-        //const searchString = (category ? `${name} ${category}` : name);
-        const searchString = name;
+        
+        //Use the imageIndex property to determine which one of the results to use
         axios.get('https://www.googleapis.com/customsearch/v1', {
             params: {
-                q : searchString,
+                q : name,
                 num : 1,
                 start : imageIndex,
-                imgSize : 'MEDIUM',
                 searchType : 'image',
                 key : 'AIzaSyBO9hTWyn5i_p-f1x7G727a0lVoQhhORTY',
                 cx : '013612111967417996789:xqs4jxjppnw'
             }
         })
         .then(response => {
+
+            //If an image was found, update it
             const imageURL = response.data.items[0].link;
             console.log(imageURL);
             if(imageURL){

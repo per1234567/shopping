@@ -273,7 +273,7 @@ class CategoryMain{
         product.remove();
     }
 
-    //Updates the image of a product in the category
+    //Updates the images of all products in the category that match the data provided
     static updateImage(data){
         const products = document.querySelectorAll(`[name = '${data.product}'][class = 'block']`);
         for(let product of products){

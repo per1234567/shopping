@@ -152,6 +152,7 @@ class ShoppingListMain{
             ListScripts.reduceQuantity(newProduct.lastElementChild);
             ListScripts.toggleTaken(newProduct.firstElementChild);
 
+            //Create a heading for a new category, in case it will have to be appended
             const categoryName = document.createElement('h1');
             categoryName.innerText = data.category;
 
@@ -159,6 +160,7 @@ class ShoppingListMain{
             var categoryInserted = false;
             var thisCategory;
 
+            //Iterate through the list to find the category where the new product should be inserted
             for(var i = 0; i < productList.length; i++){
                 if(productList[i].tagName == 'H1'){
                     if(data.category == productList[i].textContent){
@@ -174,17 +176,20 @@ class ShoppingListMain{
                     }
                 }
             }
+            //If no such category was found, insert it at the end
             if(categoryInserted === false){
                 this.products.appendChild(categoryName);
                 this.products.appendChild(newProduct);
                 return;
             }
+            //Iterate throught the products to find where it should be inserted alphabetically
             for(var i = thisCategory; i < productList.length; i++){
                 if(productList[i].tagName == 'H1' || data.name < productList[i].getAttribute('name')){
                     this.products.insertBefore(newProduct, productList[i]);
                     return;
                 }
             }
+            //If no such position was found, insert it at the end
             this.products.appendChild(newProduct);
         }
     }
@@ -209,6 +214,8 @@ class ShoppingListMain{
         const products = document.getElementById('products').children;
         for(let i = 0; i < products.length; i++){
             if(products[i].getAttribute('class') === 'product taken'){
+                
+                //If there are no more items left in this category, remove its heading
                 if(products[i].previousElementSibling.tagName == 'H1'){
                     if(!products[i].nextElementSibling || products[i].nextElementSibling.tagName == 'H1'){
                         products[i].previousElementSibling.remove();
