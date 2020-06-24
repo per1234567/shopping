@@ -8,34 +8,39 @@
     <script src = '/socket.io/socket.io.js'></script>
 </head>
 <body style = 'margin:0'>
-    <input id = 'toDirectory' onclick = 'location.href = "./directory/"' type = 'submit' value = 'D'>
+    <div id = 'topContainer'>
+        <div id = 'bulkActionSection'>
+            <input id = 'toDirectory' onclick = 'location.href = "./directory/"' type = 'submit' value = ''>
+        </div>
+        <div id = 'bulkActionSection'>
+            <div id = 'bulkActionLoading'></div>
+            <input id = 'removeTaken' type = 'submit' value = ''>
+        </div>
+        <div id = 'bulkActionSection'>
+            <div id = 'bulkActionLoading'></div>
+            <input id = 'removeAll' type = 'submit' value = ''>
+        </div>
+    </div>
     <div id = 'content'>
         <ul id = 'products'>
-            <% products.forEach(product => { %>
-            <% if(product.taken === true){ %>
-                <li class = 'product taken' name = '<%=product.name%>' unit = '<%=product.unit%>'>
-            <% } else { %>
-                <li class = 'product' name = '<%=product.name%>' unit = '<%=product.unit%>'>
+            <% for(let i = 0; i != products.length; i++){ %>
+                <% if(i === 0 || products[i].category !== products[i-1].category){ %>
+                    <h1><%=products[i].category.charAt(0).toUpperCase() + products[i].category.slice(1)%></h1>
+                <% } %>
+                <% if(products[i].taken === true){ %>
+                    <li class = 'product taken' name = '<%=products[i].name%>' unit = '<%=products[i].unit%>'>
+                <% } else { %>
+                    <li class = 'product' name = '<%=products[i].name%>' unit = '<%=products[i].unit%>'>
+                <% } %>
+                    <span id = 'text'><%= products[i].name %></span>
+                    <div id = parameterContainer>
+                        <div id = 'loading'></div>
+                        <span id = 'parameters'><%=products[i].quantity%> <%=products[i].unit%></span>
+                    </div>
+                </li>
             <% } %>
-                <span id = 'text'><%= product.name %></span>
-                <div id = parameterContainer>
-                    <div id = 'loading'></div>
-                    <span id = 'parameters'><%=product.quantity%> <%=product.unit%></span>
-                </div>
-            </li>
-            <% }); %>
         </ul>
-        <div id = 'bulkActions'>
-            <div id = 'bulkActionSection'>
-                <div id = 'bulkActionLoading'></div>
-                <input id = 'removeTaken' type = 'submit' value = '-'>
-            </div>
-            <div id = 'bulkActionSection'>
-                <div id = 'bulkActionLoading'></div>
-                <input id = 'removeAll' type = 'submit' value = 'X'>
-            </div>
-        </div>
-        <span style = 'visibility: hidden;'>a</span>
+        <span style = 'visibility: hidden;'>bottom margin</span>
     </div>
 <script src = "../shoppingList.js"></script>
 </body>

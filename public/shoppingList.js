@@ -112,6 +112,11 @@ class ShoppingListMain{
         const index = this.units.indexOf(data.unit);
         parameters[0] -= this.minimum[index];
         if(parameters[0] === 0){
+            if(product.previousElementSibling.tagName == 'H1'){
+                if(!product.nextElementSibling || product.nextElementSibling.tagName == 'H1'){
+                    product.previousElementSibling.remove();
+                }
+            }
             product.remove();
         }
         else product.lastElementChild.lastElementChild.innerText = `${parameters[0]} ${parameters[1]}`;
@@ -119,6 +124,7 @@ class ShoppingListMain{
 
     //Add a product to this new shopping list
     static addToList(data){
+        data.category = data.category.charAt(0).toUpperCase() + data.category.slice(1);
         if(data.unit === '') data.unit = ' ';
         const product = document.querySelector(`[name = '${data.name}'][unit = '${data.unit}']`);
 
@@ -146,17 +152,39 @@ class ShoppingListMain{
             ListScripts.reduceQuantity(newProduct.lastElementChild);
             ListScripts.toggleTaken(newProduct.firstElementChild);
 
-            //Insert the new category in the alphabetically correct spot
-            for(let product of this.products.children){
+            const categoryName = document.createElement('h1');
+            categoryName.innerText = data.category;
 
-                //If the next product's name is lexicographically smaller, insert the new product here
-                if(data.name < product.getAttribute('name')){
-                    this.products.insertBefore(newProduct, product);
+            const productList = this.products.children;
+            var categoryInserted = false;
+            var thisCategory;
+
+            for(var i = 0; i < productList.length; i++){
+                if(productList[i].tagName == 'H1'){
+                    if(data.category == productList[i].textContent){
+                        thisCategory = i + 1;
+                        categoryInserted = true;
+                        break;
+                    }
+                    if(data.category < productList[i].textContent){
+                        this.products.insertBefore(categoryName, productList[i]);
+                        categoryInserted = true;
+                        thisCategory = i + 1;
+                        break;
+                    }
+                }
+            }
+            if(categoryInserted === false){
+                this.products.appendChild(categoryName);
+                this.products.appendChild(newProduct);
+                return;
+            }
+            for(var i = thisCategory; i < productList.length; i++){
+                if(productList[i].tagName == 'H1' || data.name < productList[i].getAttribute('name')){
+                    this.products.insertBefore(newProduct, productList[i]);
                     return;
                 }
             }
-
-            //If no such product was found, append the new category at the end of the list
             this.products.appendChild(newProduct);
         }
     }
@@ -181,6 +209,12 @@ class ShoppingListMain{
         const products = document.getElementById('products').children;
         for(let i = 0; i < products.length; i++){
             if(products[i].getAttribute('class') === 'product taken'){
+                if(products[i].previousElementSibling.tagName == 'H1'){
+                    if(!products[i].nextElementSibling || products[i].nextElementSibling.tagName == 'H1'){
+                        products[i].previousElementSibling.remove();
+                        i--;
+                    }
+                }
                 products[i].remove();
                 i--;
             }

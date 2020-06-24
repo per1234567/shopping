@@ -110,7 +110,7 @@ class CategoryScripts{
         this.productClicks();
     }
 
-    //This method is responsible for accepting the input of adding a new product
+    //This method is responsible for accepting the input of adding a new product to this category
     static addProduct(){
 
         //When the user presses enter, accept their input
@@ -185,7 +185,8 @@ class CategoryScripts{
                 const data = {
                     name : block.getAttribute('name'),
                     quantity : block.getAttribute('quantity'),
-                    unit: block.getAttribute('unit')
+                    unit: block.getAttribute('unit'),
+                    category: document.title
                 };
                 CategoryMain.sendData('addToShoppingList', data);
             }
@@ -274,8 +275,10 @@ class CategoryMain{
 
     //Updates the image of a product in the category
     static updateImage(data){
-        const product = document.querySelector(`[name = '${data.product}'][class = 'block']`);
-        product.style.backgroundImage = `url('${data.imageSource}')`;
+        const products = document.querySelectorAll(`[name = '${data.product}'][class = 'block']`);
+        for(let product of products){
+            product.style.backgroundImage = `url('${data.imageSource}')`;
+        }
     }
 
     //Operation of a sidebar informing the user of an update in the shopping list

@@ -6,13 +6,31 @@
 #content{
     overflow: auto;
     position: fixed;
-    top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%);
+    top: 200px;
     z-index: -1;
 
-    height: 100%;
-    width: 80vw; max-width: 510px;
+    height: calc(100% - 200px);
+    width: 81vw; max-width: 502px;
+}
+
+#categories{
+    margin: 0;
+}
+
+#topContainer{
+    text-align: center;
+
+    position: fixed;
+    left: 50%;
+    transform: translate(-50%);
+
+    height: 200px;
+    width: 80vw; max-width: 500px;
+    z-index: 5;
+
+    border-bottom: 2px black solid;
 }
 
 #categories li{
@@ -66,27 +84,20 @@
     left: 50%;
     transform: translate(-50%, -50%);
 
-    background-color: rgba(255, 255, 255, 0.7);
+    background-color: rgba(255, 255, 255, 0.8);
     border:2px black solid;
 
     user-select: none;
     pointer-events: none;
 }
 
-#topContainer{
-    text-align: center;
-
-    height: 80px; 
-    width: 80vw; max-width: 500px;
-    margin-bottom: 10px;
-}
-
 #addCategory{
     height: 80px;
     width: 80px;
 
+    margin-left: 5px;
     border:2px black solid;
-    background-color: ghostwhite;
+    background-color: white;
 }
 
 #addCategory:hover{
@@ -97,17 +108,40 @@
     background-color: rgb(210,210,210);
 }
 
+#addCategory{
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 70%;
+    background-image: url('../icons/plus80.png');
+}
+
+#navigateBack{
+    height: 80px;
+    width: 80px;
+
+    margin-right: 5px;
+    border:2px black solid;
+    background-color: white;
+}
+
+#navigateBack:hover{
+    background-color: rgb(230, 230, 230);
+}
+
+#navigateBack:active{
+    background-color: rgb(210,210,210);
+}
+
+#navigateBack{
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 60%;
+    background-image: url('../icons/list80.png');
+}
+
 ul{
     padding: 0;
     list-style-type: none;
-}
-
-.button{
-    float: right;
-
-    width: 60px;
-    margin: 0;
-    box-sizing: border-box;
 }
 
 #inputWindow{
@@ -121,10 +155,11 @@ ul{
     width: 90vw; max-width: 600px;
 
     border: 1200px rgba(255, 255, 255, 0.7) solid;
-    background-color: ghostwhite;
+    background-color: white;
     background-clip: padding-box;
 
     display: none;
+    z-index: 10;
 }
 
 #errorMessage{
@@ -148,9 +183,14 @@ ul{
 
 #hideWindow{
     height: 60px;
-    background-color: ghostwhite;
+    background-color: white;
     border:1px grey solid;
     box-sizing: border-box;
+
+    float: right;
+
+    width: 60px;
+    margin: 0;
 }
 
 #hideWindow:hover{
@@ -159,6 +199,13 @@ ul{
 
 #hideWindow:active{
     background-color: rgb(210,210,210);
+}
+
+#hideWindow{
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 60%;
+    background-image: url('../icons/cross80.png');
 }
 
 #textInput{

@@ -4,7 +4,7 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
-const puppeteer = require('puppeteer');
+const axios = require('axios');
 var io;
 
 app.use(express.static('public'));
@@ -17,7 +17,8 @@ class DBAccess{
         const categorySchema = new mongoose.Schema({
             name : String,
             imageSource : String,
-            visible : Boolean
+            visible : Boolean,
+            imageIndex : Number
         });
         this.categoryModel = mongoose.model('Category', categorySchema);
 
@@ -27,13 +28,15 @@ class DBAccess{
             imageSource : String,
             visible : Boolean,
             unit : String,
-            quantity : Number
+            quantity : Number,
+            imageIndex : Number
         });
         this.productModel = mongoose.model('Product', productSchema);
 
         const listProductSchema = new mongoose.Schema({
             name : String,
             unit : String,
+            category: String,
             quantity : Number,
             taken : Boolean
         });
@@ -57,14 +60,14 @@ class DBAccess{
 
     //Create and save a category of a given name
     static saveCategory(name){
-        const data = {name : name, visible : true};
+        const data = {name : name, visible : true, imageIndex : 1};
         const newCategory = new this.categoryModel(data);
         newCategory.save();
     }
 
     //Apply a provided update to a category of the given name
     static async updateCategory(name, update){
-        await this.categoryModel.findOneAndUpdate({name : name}, update);
+        await this.categoryModel.updateMany({name : name}, update);
     }
 
     //Find products that pass a given filter
@@ -76,20 +79,20 @@ class DBAccess{
     //Create and save a product of a given name
     static saveProduct(data){
         data.visible = true;
+        data.imageIndex = 1;
         const newProduct = new this.productModel(data);
         newProduct.save();
     }
 
     //Apply a provided update to a category that passes the given filter
     static async updateProduct(filter, update){
-        console.log(filter);
-        await this.productModel.findOneAndUpdate(filter, update);
+        await this.productModel.updateMany(filter, update);
     }
 
     //Find a products in the shopping list that match a given filter
     static findListProducts(filter){
         if(filter.unit === '') filter.unit = ' ';
-        return this.listProductModel.find(filter).sort('name').exec()
+        return this.listProductModel.find(filter).sort({'category' : 1, 'name' : 1}).exec()
         .then(listProducts => { return listProducts; });
     }
 
@@ -104,7 +107,7 @@ class DBAccess{
     //Apply a given update to a product in the shoppint list that passes a given filter
     static async updateListProduct(filter, update){
         if(filter.unit === '') filter.unit = ' ';
-        await this.listProductModel.findOneAndUpdate(filter, update);
+        await this.listProductModel.updateMany(filter, update);
     }
 
     //Remove a product from the shopping list that passes a given filter
@@ -135,11 +138,6 @@ class Server{
         //Declare directory route
         app.get('/directory', async(req, res) => {
             const categories = await DBAccess.findCategories({visible: true});
-
-            //If an image of any category in the directory has not been found, look for it again
-            categories.forEach(category => {
-                if(!category.imageSource) WebScraper.scrapeImage(category.name);
-            })
             res.render('directory', {categories : categories});
         });
 
@@ -186,11 +184,6 @@ class Server{
         const route = category.replace(/ /g, '%20');
         app.get(`/category/${route}`, async(req, res) => {
             const products = await DBAccess.findProducts({category : category, visible : true});
-            
-            //If an image of any product in this category has not been found, look for it again
-            products.forEach(product => {
-                if(!product.imageSource) WebScraper.scrapeImage(product.name, product.category);
-            })
             res.render('category', {category : category, products : products});
         });
     }
@@ -224,15 +217,16 @@ class Main{
 
         //If such a category does not exist, create one
         if(category.length === 0){
+            this.sendData('addCategory', {category : name});
             Server.createCategoryRoute(name);
             DBAccess.saveCategory(name);
-            this.sendData('addCategory', {category : name});
-            WebScraper.scrapeImage(name);
+            WebScraper.findImage(name, null, 1);
         } else {
             //If such a category does exist but it has been removed, bring it back
             if(category[0].visible === false){
                 this.sendData('addCategory', {category : name});
-                DBAccess.updateCategory(name, {visible : true});
+                DBAccess.updateCategory(name, {visible : true, $inc : {imageIndex : 1}});
+                WebScraper.findImage(name, null, category[0].imageIndex + 1);
             }
             //If such a category does exist and it has not been removed, throw an error
             else {
@@ -256,15 +250,16 @@ class Main{
         if(product.length === 0){
             this.sendData(`addProduct${data.category}`, data);
             DBAccess.saveProduct(data);
-            WebScraper.scrapeImage(data.name, data.category);
+            WebScraper.findImage(data.name, data.category, 1);
         } else {
             
             //If such a product exists but is removed, bring it back
             if(product[0].visible === false){
                 this.sendData(`addProduct${data.category}`, data);
-                DBAccess.updateProduct(data, {visible : true});
+                DBAccess.updateProduct(data, {visible : true, $inc : {imageIndex : 1}});
+                WebScraper.findImage(data.name, data.category, product[0].imageIndex + 1);
             }
-            //If such a product exists and is visible, throw and error
+            //If such a product exists and is visible, throw an error
             else {
                 this.sendData('errormsg', {errorMessage : 'Already exists'}, socket);
             }
@@ -340,8 +335,8 @@ class Main{
         this.sendData('removeTaken');
     }
 
+    //Sends the newly received image to the client and saves it to the database
     static newImage(url, name, category){
-        console.log(url);
         if(category){
             DBAccess.updateProduct({name : name, category : category}, {imageSource : url});
             Main.sendData(`updateImage${category}`, {product : name, imageSource : url});
@@ -355,46 +350,31 @@ class Main{
 
 //This class handles finding images online
 class WebScraper{
-    //Retrieves the link of the first image that matches a provided name on yandex.com
-    static async scrapeImage(name, category){
-        const url = `https://yandex.com/images/search?text=${name}&isize=small`;
-        puppeteer.launch({
-            args: [
-              '--no-sandbox',
-              '--disable-setuid-sandbox',
-            ],
-          }).then(async browser => {
-            //Try to find the product
-            try{
-                const page = await browser.newPage();
-                await page.goto(url, {waitUntil: 'load', timeout: 0});
-
-                //Navigate to where the section containing the link to the image is
-                var [el] = await page.$x('/html/body/div[6]/div[1]/div[1]/div[1]/div/div[1]/div/a');
-                
-                //Try a different location if the previous one fails
-                if(!el){
-                    [el] = await page.$x('/html/body/div[6]/div[1]/div[1]/div[2]/div/div[1]/div/a');
-                }
-                const url2 = await el.getProperty('href');
-                const url2text = await url2.jsonValue();
-
-                await page.goto(url2text, {waitUntil: 'load', timeout: 0});
-                //Navigate to where the link to the image is
-                const [el2] = await page.$x('/html/body/div[14]/div/div/div/div[3]/div/div[1]/div[1]/div[3]/div/img');
-                const src = await el2.getProperty('src');
-                const imageURL = await src.jsonValue();
-
-                browser.close();
-
-                //Process the image once it has been retrieved
-                Main.newImage(imageURL, name, category);
-
-            //If an unforeseen error occurs, will try again later
-            } catch (e) { console.log(e);
+    //Use Google's custom search API to find an image
+    static async findImage(name, category, imageIndex){
+        //const searchString = (category ? `${name} ${category}` : name);
+        const searchString = name;
+        axios.get('https://www.googleapis.com/customsearch/v1', {
+            params: {
+                q : searchString,
+                num : 1,
+                start : imageIndex,
+                imgSize : 'MEDIUM',
+                searchType : 'image',
+                key : 'AIzaSyBO9hTWyn5i_p-f1x7G727a0lVoQhhORTY',
+                cx : '013612111967417996789:xqs4jxjppnw'
             }
         })
-        .catch(err => { console.log(err)});
+        .then(response => {
+            const imageURL = response.data.items[0].link;
+            console.log(imageURL);
+            if(imageURL){
+                Main.newImage(imageURL, name, category);
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        });
     }
 }
 

@@ -8,22 +8,22 @@
     <script src = '/socket.io/socket.io.js'></script>
 </head>
 <body style = 'margin:0'>
-
     <div id = 'sidebar' onclick = 'location.href = "/"'></div>
     
     <div id = 'inputWindow'>
-        <input id = 'hideWindow' class = 'button' type = 'submit' value = 'X'>
+        <input id = 'hideWindow' class = 'button' type = 'submit' value = ' '>
         <input id = 'toggleDropdown' class = 'button' type = 'submit' value = 'select unit'>
         <input id = 'textInput' type = "text">
         <ul id = dropdownMenu>
         </ul>
     </div>
-    
-    <div id = 'content'>
+    <div id = 'topContainer'>
         <div id = 'errorMessage'></div>
-        <div id = 'topContainer'>
-            <input id = 'addProduct' type = 'submit' value = '+'>
-        </div>
+        <input id = 'navigateList' onclick = 'location.href = "/"'type = 'submit' value = ' '>
+        <input id = 'navigateBack' onclick = 'location.href = "../directory"' type = 'submit' value = ' '>
+        <input id = 'addProduct' type = 'submit' value = ' '>
+    </div>
+    <div id = 'content'>
         <ul id = 'products'>
         <% products.forEach(product => { %>
             <% if(product.imageSource){ %>
