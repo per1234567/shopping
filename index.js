@@ -5,6 +5,7 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const axios = require('axios');
+const privateData = require('./private.js');
 var io;
 
 app.use(express.static('public'));
@@ -43,7 +44,7 @@ class DBAccess{
         this.listProductModel = mongoose.model('ListProduct', listProductSchema);
 
         //Connect to the database
-        const url = 'mongodb+srv://Per:HVOSDPWev9AYocyY@perliukai-4jawx.gcp.mongodb.net/data?retryWrites=true&w=majority';
+        const url = privateData.mongoAccess;
         mongoose.set('useNewUrlParser', true);
         mongoose.set('useUnifiedTopology', true);
         mongoose.set('useFindAndModify', false);
@@ -361,8 +362,8 @@ class WebScraper{
                 num : 1,
                 start : imageIndex,
                 searchType : 'image',
-                key : 'AIzaSyBO9hTWyn5i_p-f1x7G727a0lVoQhhORTY',
-                cx : '013612111967417996789:xqs4jxjppnw'
+                key : privateData.APIkey,
+                cx : privateData.CSE
             }
         })
         .then(response => {
