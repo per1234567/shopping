@@ -78,7 +78,11 @@ class DirectoryScripts{
                 else if(name[0] === ' ') Error.throw('Cannot start with space');
 
                 //Otherwise send a request to add the category to the server
-                else DirectoryMain.sendData('addCategory', {category : name});
+                else{
+                    //Capitalize first letter
+                    name = name.charAt(0).toUpperCase() + name.slice(1);
+                    DirectoryMain.sendData('addCategory', {category : name});
+                }
             });
         });
 

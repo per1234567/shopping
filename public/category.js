@@ -133,7 +133,9 @@ class CategoryScripts{
                 else if(name[0] === ' '){ Error.throw('Name cannot start with a space'); }
                 else if(this.toggledropdown.value === 'select unit'){ Error.throw('No unit selected'); }
                 else{
+                    //Obtain unit and quantity, capitalize first letter
                     const data = this.toggledropdown.value.split(' ');
+                    name = name.charAt(0).toUpperCase() + name.slice(1);
                     CategoryMain.sendData('addProduct', 
                     {category : document.title, name : name, quantity : data[0], unit : data[1]});
                 }
@@ -180,7 +182,7 @@ class CategoryScripts{
             tap.preventDefault();
             var clickNow = new Date();
 
-            //If the product has been clickefor less than 0.2 seconds,
+            //If the product has been clicked for less than 0.2 seconds,
             //Add it to the shopping list
             if(clickNow - this.lastClick < 200){
                 const data = {
