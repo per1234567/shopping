@@ -27,6 +27,24 @@ class ListScripts{
 
     //Detect a long click/tap on an item and perform the provided function
     static longClick(item, target, request, delay, data){
+        item.addEventListener('touchstart', tap => {
+            tap.preventDefault();
+            this.lastClick = new Date();
+            target.classList.add('clicked');
+            setTimeout(() => {
+                var clickNow = new Date();
+                if(clickNow - this.lastClick >= delay - 5){
+                    ShoppingListMain.sendData(request, data);
+                }
+            }, delay);
+        });
+
+        item.addEventListener('touchend', tap => {
+            tap.preventDefault();
+            this.lastClick += 100000;
+            target.classList.remove('clicked');
+        });
+        
         item.addEventListener('mousedown', () => {
             this.lastClick = new Date();
             target.classList.add('clicked');
@@ -53,21 +71,6 @@ class ListScripts{
         });
 
         //Equivalent for touch controls
-        item.addEventListener('touchstart', () => {
-            this.lastClick = new Date();
-            target.classList.add('clicked');
-            setTimeout(() => {
-                var clickNow = new Date();
-                if(clickNow - this.lastClick >= delay - 5){
-                    ShoppingListMain.sendData(request, data);
-                }
-            }, delay);
-        });
-
-        item.addEventListener('touchend', () => {
-            this.lastClick += 100000;
-            target.classList.remove('clicked');
-        });
     }
     
     //Adds functionality to reduce the amount of a product in the shopping list
