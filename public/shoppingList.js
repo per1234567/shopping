@@ -51,6 +51,23 @@ class ListScripts{
             this.lastClick += 100000;
             target.classList.remove('clicked');
         });
+
+        //Equivalent for touch controls
+        item.addEventListener('touchstart', () => {
+            this.lastClick = new Date();
+            target.classList.add('clicked');
+            setTimeout(() => {
+                var clickNow = new Date();
+                if(clickNow - this.lastClick >= delay - 5){
+                    ShoppingListMain.sendData(request, data);
+                }
+            }, delay);
+        });
+
+        item.addEventListener('touchend', () => {
+            this.lastClick += 100000;
+            target.classList.remove('clicked');
+        });
     }
     
     //Adds functionality to reduce the amount of a product in the shopping list
