@@ -118,6 +118,12 @@ class DirectoryScripts{
         //If the user moves their finger off the block, the long click will not be registered
         block.addEventListener('touchend', tap => {
             tap.preventDefault();
+            var clickNow = new Date();
+
+            //If the category has been clicked for less than 0.2 seconds, redirect to the category
+            if(clickNow - this.lastClick < 200){
+                window.location.href = `/category/${block.lastElementChild.getAttribute('name')}`;
+            }
             this.lastClick += 100000;
             block.classList.remove('clicked');
         });

@@ -12,7 +12,7 @@
     z-index: -1;
 
     height: calc(100% - 200px);
-    width: 81vw; max-width: 502px;
+    width: 100vw;
 }
 
 #products{
@@ -39,6 +39,7 @@
 
 #products li:nth-child(odd){
     border-right: none;
+    margin-left: max(10vw, 50vw - 251px);
 }
 
 #products li:last-child{
