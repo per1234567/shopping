@@ -156,15 +156,15 @@ class CategoryScripts{
 
     //Long click/tap removes the product, short click adds it to the shopping list
     static click(block){
-
-        //Detect long click/tap
-        block.addEventListener('mousedown', () => {
+        //Implementation for touchscreen devices
+        block.addEventListener('touchstart', tap => {
+            tap.preventDefault();
             this.lastClick = new Date();
             block.classList.add('clicked');
             setTimeout(() => {
                 var clickNow = new Date();
 
-                //If last clicked/tapped more that 3 seconds ago, send a request to the server to remove this product
+                //If last clicked more that 3 seconds ago, send a request to the server to remove this product
                 if(clickNow - this.lastClick >= 2990)
                     CategoryMain.sendData('removeProduct', {
                         category : document.title,
@@ -174,12 +174,13 @@ class CategoryScripts{
                     });
             }, 3000);
         });
-
-        //A short click/tap will add the product to the shopping list
-        block.addEventListener('mouseup', click => {
+        
+        //A short click will add the product to the shopping list
+        block.addEventListener('touchend', tap => {
+            tap.preventDefault();
             var clickNow = new Date();
 
-            //If the product has been clicked/pressed for less than 0.2 seconds,
+            //If the product has been clickefor less than 0.2 seconds,
             //Add it to the shopping list
             if(clickNow - this.lastClick < 200){
                 const data = {
@@ -196,7 +197,46 @@ class CategoryScripts{
             block.classList.remove('clicked');
         });
 
-        //If the mouse/finger hovers off the tile, a long click will no longer register
+        //Equivalent for click using mouse
+        block.addEventListener('mousedown', () => {
+            this.lastClick = new Date();
+            block.classList.add('clicked');
+            setTimeout(() => {
+                var clickNow = new Date();
+
+                //If last clickedmore that 3 seconds ago, send a request to the server to remove this product
+                if(clickNow - this.lastClick >= 2990)
+                    CategoryMain.sendData('removeProduct', {
+                        category : document.title,
+                        name : block.getAttribute('name'),
+                        quantity : block.getAttribute('quantity'),
+                        unit: block.getAttribute('unit')
+                    });
+            }, 3000);
+        });
+
+        //A short click will add the product to the shopping list
+        block.addEventListener('mouseup', click => {
+            var clickNow = new Date();
+
+            //If the product has been clickefor less than 0.2 seconds,
+            //Add it to the shopping list
+            if(clickNow - this.lastClick < 200){
+                const data = {
+                    name : block.getAttribute('name'),
+                    quantity : block.getAttribute('quantity'),
+                    unit: block.getAttribute('unit'),
+                    category: document.title
+                };
+                CategoryMain.sendData('addToShoppingList', data);
+            }
+
+            //When unpressed, a long click will no longer register
+            this.lastClick += 100000;
+            block.classList.remove('clicked');
+        });
+
+        //If the mouse hovers off the tile, a long click will no longer register
         block.addEventListener('mouseout', () => {
             this.lastClick += 100000;
             block.classList.remove('clicked');

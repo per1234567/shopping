@@ -99,7 +99,30 @@ class DirectoryScripts{
 
     //This method allows for the working of removing a category
     static removeCategory(block){
-        
+        //Function to detect a long click
+        block.addEventListener('touchstart', tap => {
+            tap.preventDefault();
+            this.lastClick = new Date();
+            block.classList.add('clicked');
+            setTimeout(() => {
+                var clickNow = new Date();
+
+                //If something has been last clicked more that 3 seconds ago, send a request to
+                //remove the category to the server
+                if(clickNow - this.lastClick >= 2990)
+                    DirectoryMain.sendData('removeCategory',
+                        {category : block.lastElementChild.getAttribute('name')});
+            }, 3000);
+        });
+
+        //If the user moves their finger off the block, the long click will not be registered
+        block.addEventListener('touchend', tap => {
+            tap.preventDefault();
+            this.lastClick += 100000;
+            block.classList.remove('clicked');
+        });
+
+        //Equivalent for click using mouse
         //Function to detect a long click
         block.addEventListener('mousedown', () => {
             this.lastClick = new Date();
