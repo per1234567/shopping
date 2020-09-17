@@ -100,7 +100,9 @@
 #addProduct{
     height: 80px;
     width: 80px;
+    float: right;
 
+    margin-right: 5px;
     border:2px black solid;
     background-color: white;
 }
@@ -123,8 +125,9 @@
 #navigateBack{
     height: 80px;
     width: 80px;
+    float: left;
 
-    margin: 0 10px;
+    margin: 0 5px;
     border:2px black solid;
     background-color: white;
 }
@@ -140,31 +143,8 @@
 #navigateBack{
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 70%;
-    background-image: url('../icons/basket80.png');
-}
-
-#navigateList{
-    height: 80px;
-    width: 80px;
-
-    border:2px black solid;
-    background-color: white;
-}
-
-#navigateList:hover{
-    background-color: rgb(230, 230, 230);
-}
-
-#navigateList:active{
-    background-color: rgb(210,210,210);
-}
-
-#navigateList{
-    background-repeat: no-repeat;
-    background-position: center;
     background-size: 60%;
-    background-image: url('../icons/list80.png');
+    background-image: url('../icons/back80.png');
 }
 
 #dropdownMenu li:hover{
@@ -356,4 +336,9 @@ ul{
 
 :focus{
     outline: none;
+}
+
+#pageName{
+    line-height: 80px;
+    font-weight: bold;
 }

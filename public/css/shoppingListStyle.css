@@ -24,7 +24,6 @@ body{
 }
 
 #topContainer{
-    text-align: center;
 
     position: fixed;
     left: 50%;
@@ -146,16 +145,21 @@ ul{
     width: calc(min(360px, 80vw - 140px));
 }
 
-#bulkActionSection{
-    display: inline-block;
-    position: relative;
+#bulkActionSection:nth-child(1){
+    float:left;
+}
 
+#bulkActionSection{
+    position: relative;
+    float:right;
     width: 80px;
     height: 80px;
     margin: 80px 5px;
     
     overflow: hidden;
 }
+
+
 
 #bulkActionLoading{
     pointer-events: none;
@@ -174,7 +178,7 @@ ul{
     background-repeat: no-repeat;
     background-position: center;
     background-size: 60%;
-    background-image: url('../icons/cross80.png');
+    background-image: url('../icons/trash80.png');
 }
 
 #toDirectory{

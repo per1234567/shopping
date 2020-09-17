@@ -95,8 +95,10 @@
 #addCategory{
     height: 80px;
     width: 80px;
+    float: right;
 
     margin-left: 5px;
+    margin-right: 5px;
     border:2px black solid;
     background-color: white;
 }
@@ -112,15 +114,17 @@
 #addCategory{
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 70%;
+    background-size: 60%;
     background-image: url('../icons/plus80.png');
 }
 
 #navigateBack{
     height: 80px;
     width: 80px;
+    float: left;
 
     margin-right: 5px;
+    margin-left: 5px;
     border:2px black solid;
     background-color: white;
 }
@@ -137,7 +141,7 @@
     background-repeat: no-repeat;
     background-position: center;
     background-size: 60%;
-    background-image: url('../icons/list80.png');
+    background-image: url('../icons/back80.png');
 }
 
 ul{
