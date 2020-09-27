@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel = "stylesheet" type = "text/css" href = "/css/loginStyle.css">
+    <link rel = "shortcut icon" type="image/png" href="/icons/cart80.png">
+    <script src = '/socket.io/socket.io.js'></script>
+</head>
+<body>
+    <div id = 'content'>
+        <h1>Please login</h1>
+        <input id = 'username' type = "text" placeholder="username">
+        <input id = 'password' type = "text" placeholder="password">
+        <input id = 'submit' type = "button" value = "submit">
+        <h2 id = 'errorMessage' style = 'visibility:hidden'>Bad login</h2>
+    </div>
+<script src = "../login.js"></script>
+</body>
+</html>

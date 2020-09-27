@@ -339,6 +339,9 @@ ul{
 }
 
 #pageName{
+    left: 50%;
+    transform: translate(-50%);
+    position: fixed;
     line-height: 80px;
     font-weight: bold;
 }

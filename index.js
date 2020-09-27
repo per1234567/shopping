@@ -147,11 +147,20 @@ class Server{
             const listItems = await DBAccess.findListProducts({});
             res.render('shoppingList', {products : listItems});
         });
+
+        //Declare route for login page
+        app.get('/login', async(req, res) => {
+            res.render('login');
+        });
     }
 
     //Build sockets used for accepting requests from clients
     static buildSockets(){
         io.on('connection', socket => {
+            socket.on('authenticateLogin', data => { Main.authenticateLogin(socket, data) });
+
+            socket.on('loginAttempt', data => { Main.loginAttempt(socket, data)});
+
             socket.on('addCategory', data => { Main.addCategory(socket, data.category); });
 
             socket.on('removeCategory', data => { Main.removeCategory(data.category); });
@@ -207,6 +216,23 @@ class Main{
         }
         else{
             io.emit(address, resObject);
+        }
+    }
+
+    //authenticate whether the cookie shown on the user's webpage matches the login credentials needed
+    static authenticateLogin(socket, data){
+        var correct = (data.credentials === `${privateData.adminUsername} ${privateData.adminPassword}`);
+        this.sendData('loginAuthenticated', {success: correct}, socket);
+    }
+
+    //If logged in for the first time, send that information to the user
+    static loginAttempt(socket, data){
+        if(data.username === privateData.adminUsername && data.password === privateData.adminPassword){
+            this.sendData('loggedIn', data, socket);
+        }
+        else{
+            //If the login credentials are bad, display an error
+            this.sendData('badLogin', {}, socket);
         }
     }
 

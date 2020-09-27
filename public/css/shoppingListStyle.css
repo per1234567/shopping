@@ -151,7 +151,7 @@ ul{
 
 #bulkActionSection{
     position: relative;
-    float:right;
+    float: right;
     width: 80px;
     height: 80px;
     margin: 80px 5px;
@@ -178,14 +178,14 @@ ul{
     background-repeat: no-repeat;
     background-position: center;
     background-size: 60%;
-    background-image: url('../icons/trash80.png');
+    background-image: url('../icons/bomb80.png');
 }
 
 #toDirectory{
     background-repeat: no-repeat;
     background-position: center;
     background-size: 70%;
-    background-image: url('../icons/basket80.png');
+    background-image: url('../icons/cart80.png');
 }
 
 #removeTaken{

@@ -253,6 +253,7 @@ class CategoryMain{
         this.socket = io();
 
         this.createSockets();
+        this.authenticateLogin();
         this.products = document.getElementById('products');
     }
 
@@ -261,8 +262,18 @@ class CategoryMain{
         this.socket.emit(request, data);
     }
 
+    //Send the cookie on the webpage back to the server for confirmation of login credentials
+    static authenticateLogin(){
+        this.sendData('authenticateLogin', {credentials: document.cookie});
+    }
+
     //Create the sockets used for receiving data from the server
     static createSockets(){
+        //If the login is bad, redirect the user back to the login page
+        this.socket.on('loginAuthenticated', data => {
+            if(data.success === false) window.location.href = '/login';
+        });
+
         this.socket.on('errormsg', data => { Error.throw(data.errorMessage); });
 
         this.socket.on(`addProduct${document.title}`, data => { this.addProduct(data); });

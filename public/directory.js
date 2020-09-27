@@ -197,10 +197,16 @@ class DirectoryMain{
     static initialize(){
         this.socket = io();
         this.sockets();
+        this.authenticateLogin();
     }
 
     //Initialize the sockets used for accepting requests from the server
     static sockets(){
+        //If the login is bad, redirect the user back to the login page
+        this.socket.on('loginAuthenticated', data => {
+            if(data.success === false) window.location.href = '/login';
+        });
+        
         this.socket.on('errormsg', data => { Error.throw(data.errorMessage); });
 
         this.socket.on('addCategory', data => { this.addCategory(data.category); });
@@ -213,6 +219,11 @@ class DirectoryMain{
     //Send data to the server
     static sendData(request, data){
         this.socket.emit(request, data);
+    }
+
+    //Send the cookie on the webpage back to the server for confirmation of login credentials
+    static authenticateLogin(){
+        this.sendData('authenticateLogin', {credentials: document.cookie});
     }
 
     //This method performs the action of displaying a new category in the directory

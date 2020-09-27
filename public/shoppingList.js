@@ -104,6 +104,7 @@ class ShoppingListMain{
     static initialize(){
         this.socket = io();
         this.createSockets();
+        this.authenticateLogin();
         this.products = document.getElementById('products');
 
         this.units = ['g','kg','ml','l',' '];
@@ -115,8 +116,18 @@ class ShoppingListMain{
         this.socket.emit(request, data);
     }
 
+    //Send the cookie on the webpage back to the server for confirmation of login credentials
+    static authenticateLogin(){
+        this.sendData('authenticateLogin', {credentials: document.cookie});
+    }
+
     //Create the sockets used for accepting a request from the server
     static createSockets(){
+        //If the login is bad, redirect the user back to the login page
+        this.socket.on('loginAuthenticated', data => {
+            if(data.success === false) window.location.href = '/login';
+        });
+        
         this.socket.on('addToShoppingList', data => { this.addToList(data); });
 
         this.socket.on('updateListProduct', data => { this.updateListProduct(data); });
