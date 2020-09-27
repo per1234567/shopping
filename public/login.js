@@ -1,4 +1,5 @@
 //Functions relating to the error message
+
 class Error{
     //Retrieve the location of the error bar on the page
     static initialize(){
@@ -41,7 +42,10 @@ class LoginMain{
         this.socket.on('loggedIn', data => {
             
             //If the login is good, set the appropriate cookie
-            document.cookie = `${data.username} ${data.password}`;
+            var date = new Date();
+            date.setFullYear(date.getFullYear() + 1);
+            document.cookie = `name=${data.username} ${data.password}; path=/; expires=${date.toUTCString()}`;
+            
             window.location.href = '/';
         });
 

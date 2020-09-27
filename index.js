@@ -221,7 +221,7 @@ class Main{
 
     //authenticate whether the cookie shown on the user's webpage matches the login credentials needed
     static authenticateLogin(socket, data){
-        var correct = (data.credentials === `${privateData.adminUsername} ${privateData.adminPassword}`);
+        var correct = (data.credentials === `name=${privateData.adminUsername} ${privateData.adminPassword}`);
         this.sendData('loginAuthenticated', {success: correct}, socket);
     }
 
