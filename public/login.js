@@ -31,12 +31,12 @@ class LoginMain{
         this.socket = io();
 
         this.authenticateLogin();
-        this.sockets();
+        this.createSockets();
         this.scripts();
     }
 
     //Receiving data from server
-    static sockets(){
+    static createSockets(){
         this.socket.on('badLogin', () => { Error.throw() });
         
         this.socket.on('loggedIn', data => {

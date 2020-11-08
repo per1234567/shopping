@@ -191,7 +191,12 @@ class Server{
 
     //Create the route
     static createCategoryRoute(category){
-        const route = category.replace(/ /g, '%20');
+        //map the name of the category onto a unique string
+        //this is necessary because some characters entered by the user may not be usable in a URL
+        var route = '';
+        for(var i = 0; i < category.length; i++){
+            route += '-' + category.charCodeAt(i);
+        }
         app.get(`/category/${route}`, async(req, res) => {
             const products = await DBAccess.findProducts({category : category, visible : true});
             res.render('category', {category : category, products : products});

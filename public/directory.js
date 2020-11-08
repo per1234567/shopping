@@ -126,7 +126,14 @@ class DirectoryScripts{
 
             //If the category has been clicked for less than 0.2 seconds, redirect to the category
             if(clickNow - this.lastClick < 200){
-                window.location.href = `/category/${block.lastElementChild.getAttribute('name')}`;
+                //map the name of the category onto a unique string
+                //this is necessary because some characters entered by the user may not be usable in a URL
+                var route = '';
+                const category = block.lastElementChild.getAttribute('name');
+                for(var i = 0; i < category.length; i++){
+                    route += '-' + category.charCodeAt(i);
+                }
+                window.location.href = `/category/${route}`;
             }
             this.lastClick += 100000;
             block.classList.remove('clicked');
@@ -185,8 +192,16 @@ class DirectoryScripts{
 
         //If the blocks is marked as recently clicked when the user unpresses, trigger the redirect
         block.addEventListener('click', () => {
-            if(block.classList.contains('recent'))
-                window.location.href = `/category/${block.lastElementChild.getAttribute('name')}`;
+            if(block.classList.contains('recent')){
+                //map the name of the category onto a unique string
+                //this is necessary because some characters entered by the user may not be usable in a URL
+                var route = '';
+                const category = block.lastElementChild.getAttribute('name');
+                for(var i = 0; i < category.length; i++){
+                    route += '-' + category.charCodeAt(i);
+                }
+                window.location.href = `/category/${route}`;
+            }
         })
     }
 }
