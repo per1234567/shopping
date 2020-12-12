@@ -118,6 +118,7 @@ class CategoryScripts{
             if(keyPress.key === 'Enter'){
                 this.inputWindow.style.display = 'none';
                 this.textInputValue.a = textInput.value;
+                this.textInput.value = '';
             }
         });
 

@@ -63,6 +63,7 @@ class DirectoryScripts{
             if(keyPress.key === 'Enter'){
                 inputWindow.style.display = 'none';
                 this.textInputValue.a = textInput.value;
+                textInput.value = '';
             }
         });
         
