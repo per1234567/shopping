@@ -27,7 +27,6 @@ class ListScripts{
 
     //Detect a long click/tap on an item and perform the provided function
     static longClick(item, target, request, delay, data){
-
         item.addEventListener('touchstart', tap => {
             tap.preventDefault();
             this.lastClick = new Date();
@@ -68,7 +67,6 @@ class ListScripts{
             this.lastClick += 100000;
             target.classList.remove('clicked');
         });
-
         //If the user hovers off, the long click will not be registered
         item.addEventListener('mouseout', () => {
             this.lastClick += 100000;
@@ -146,6 +144,8 @@ class ShoppingListMain{
         const index = this.units.indexOf(data.unit);
         parameters[0] -= this.minimum[index];
         if(parameters[0] === 0){
+            
+            //If this is the last product in a particular category, remove that category's name as well
             if(product.previousElementSibling.tagName == 'H1'){
                 if(!product.nextElementSibling || product.nextElementSibling.tagName == 'H1'){
                     product.previousElementSibling.remove();
@@ -243,7 +243,7 @@ class ShoppingListMain{
         this.products.innerHTML = '';
     }
 
-    //Remove all products from the shopping list
+    //Remove all products marked as taken from the shopping list
     static removeTaken(){
         const products = document.getElementById('products').children;
         for(let i = 0; i < products.length; i++){

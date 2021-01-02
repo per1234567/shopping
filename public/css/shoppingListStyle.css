@@ -159,8 +159,6 @@ ul{
     overflow: hidden;
 }
 
-
-
 #bulkActionLoading{
     pointer-events: none;
     position: absolute;
@@ -172,6 +170,11 @@ ul{
     background-color: rgba(50, 50, 50, 0.7);
 
     transition: 1s;
+}
+
+.clicked #bulkActionLoading{
+    transition: 3s;
+    left: 0;
 }
 
 #removeAll{
@@ -193,11 +196,6 @@ ul{
     background-position: center;
     background-size: 80%;
     background-image: url('../icons/check80.png');
-}
-
-.clicked #bulkActionLoading{
-    transition: 3s;
-    left: 0;
 }
 
 :focus{

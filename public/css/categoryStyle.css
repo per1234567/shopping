@@ -61,12 +61,12 @@
 }
 
 .block{
+    height: 40vw; max-height: 250px;
+    width: 40vw; max-width: 250px;
+
     position: relative;
     float : left;
     overflow: hidden;
-
-    height: 40vw; max-height: 250px;
-    width: 40vw; max-width: 250px;
 
     border: 2px black solid;
     background-color: white;

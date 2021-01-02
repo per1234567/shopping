@@ -37,16 +37,15 @@ class DirectoryScripts{
         //This object is responsible for allowing the program to detect globally when a text input is entered
         this.textInputValue = {
             value: '',
-            aListener: function(val) {},
+            listener: function(val) {},
             set a(newValue) {
               this.value = newValue;
-              this.aListener(newValue);
-            },
-            get a() {
-              return this.value;
-            },
+              this.listener(newValue); },
+
+            get a() { return this.value; },
+            
             awaitUpdate: function(update) {
-              this.aListener = update;
+              this.listener = update;
             }
         }
     }
@@ -198,7 +197,7 @@ class DirectoryScripts{
                 //this is necessary because some characters entered by the user may not be usable in a URL
                 var route = '';
                 const category = block.lastElementChild.getAttribute('name');
-                for(var i = 0; i < category.length; i++){
+                for(let i = 0; i < category.length; i++){
                     route += '-' + category.charCodeAt(i);
                 }
                 window.location.href = `/category/${route}`;
@@ -253,20 +252,22 @@ class DirectoryMain{
         //Add scripts to this new HTML object
         DirectoryScripts.redirect(newCategory);
         DirectoryScripts.removeCategory(newCategory);
-                                
-        //Insert the new category in the alphabetically correct spot
+        
+        //Binary search to insert category in alphabetical order
         const categories = document.getElementById('categories');
-        for(let category of categories.children){
-            
-            //If the next category's name is lexicographically smaller, insert the new product here
-            if(name < category.lastElementChild.innerText){
-                categories.insertBefore(newCategory, category);
-                return;
-            }
-        }
+        const elements = categories.children;
+        var lowerBound = 0, upperBound = elements.length - 1, mid;
 
-        //If no such product was found, append the new category at the end of the list
-        categories.appendChild(newCategory);
+        while(lowerBound <= upperBound){
+            mid = Number.parseInt((lowerBound + upperBound + 1) / 2);
+
+            //If category should go before mid look left, otherwise look right
+            if(name < elements[mid].innerText)
+                upperBound = mid - 1;
+            else
+                lowerBound = mid + 1;
+        }
+        categories.insertBefore(newCategory, elements[lowerBound]);
     }
 
     //This method removes a category of a provided name

@@ -1,13 +1,13 @@
 {
-  "name": "cscopy",
-  "version": "1.0.0",
-  "description": "",
+  "name": "shoppinglist",
+  "version": "2.1.2",
+  "description": "Shopping list",
   "main": "index.js",
   "scripts": {
     "start": "node index",
     "dev": "nodemon index"
   },
-  "author": "Per",
+  "author": "Author",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.19.2",

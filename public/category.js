@@ -33,13 +33,37 @@ class Dropdown{
         this.dropdownMenu = document.getElementById('dropdownMenu');
         this.toggledropdown = document.getElementById('toggleDropdown');
 
-        //Assigns minimum quantities for each unit
-        this.names = ['g','kg','ml','l',' '];
-        this.quantity = [100, 1, 100, 1, 1];
+        //Assign minimum quantities for each standard unit
+        this.standardUnits = [
+            {unit : 'g', minQuantity : 100},
+            {unit : 'kg', minQuantity : 1},
+            {unit : 'ml', minQuantity : 100},
+            {unit : 'l', minQuantity : 1},
+            {unit : ' ', minQuantity : 1}
+        ]
 
         //Call the methods in this class
         this.dropdownMenuItems();
         this.toggleDropdown();
+    }
+
+    //This creates options in the dropdown menu from the units and quantities initialized before
+    static dropdownMenuItems(){
+        var option;
+        this.standardUnits.forEach(entry => {
+            
+            //Create the new HTMLElement
+            option = document.createElement('li');
+            option.setAttribute('name', entry.unit);
+            option.setAttribute('quantity', entry.minQuantity);
+            option.innerHTML = 
+            `<input class = dropdownMenuItem type = 'submit' 
+                    value = '${entry.minQuantity} ${entry.unit}'>`;
+            
+            //Add scripts to each new option
+            this.dropdownMenuItem(option);
+            this.dropdownMenu.appendChild(option);
+        });
     }
 
     //Toggle the visibility of the dropdown menu
@@ -47,24 +71,6 @@ class Dropdown{
         this.toggledropdown.addEventListener('click', () => {
             dropdownMenu.classList.toggle('visible');
         });
-    }
-
-    //This creates options in the dropdown menu from the units and quantities initialized before
-    static dropdownMenuItems(){
-        var option;
-        for(var i = 0; i < this.names.length; i++){
-            //Create each HTML object
-            option = document.createElement('li');
-            option.setAttribute('name', this.names[i]);
-            option.setAttribute('quantity', this.quantity[i]);
-            option.innerHTML = 
-            `<input class = dropdownMenuItem type = 'submit' 
-                    value = '${this.quantity[i]} ${this.names[i]}'>`;
-
-            //Add scripts to each of these new objects
-            this.dropdownMenuItem(option);
-            this.dropdownMenu.appendChild(option);
-        }
     }
 
     //When clicked on an item from the dropdown menu, 
@@ -254,8 +260,8 @@ class CategoryMain{
         this.socket = io();
 
         this.createSockets();
-        this.authenticateLogin();
         this.products = document.getElementById('products');
+        this.authenticateLogin();
     }
 
     //Send data to the server

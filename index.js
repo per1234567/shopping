@@ -1,6 +1,5 @@
-//This is the back end of the program.
+//This is the back end-of the program.
 //Accessing the database, processing user inputs and connecting users is done here
-
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
@@ -154,6 +153,28 @@ class Server{
         });
     }
 
+    //Calls a request to create a route for each category at startup of server
+    static async createCategoryRoutes(){
+        const categories = await DBAccess.findCategories();
+        for(let category of categories){
+            this.createCategoryRoute(category.name);
+        }
+    }
+
+    //Create the route
+    static createCategoryRoute(category){
+        //map the name of the category onto a unique string
+        //this is necessary because some characters entered by the user may not be usable in a URL
+        var route = '';
+        for(var i = 0; i < category.length; i++){
+            route += '-' + category.charCodeAt(i);
+        }
+        app.get(`/category/${route}`, async(req, res) => {
+            const products = await DBAccess.findProducts({category : category, visible : true});
+            res.render('category', {category : category, products : products});
+        });
+    }
+
     //Build sockets used for accepting requests from clients
     static buildSockets(){
         io.on('connection', socket => {
@@ -179,28 +200,6 @@ class Server{
 
             socket.on('removeTaken', () => { Main.removeTaken() });
         })
-    }
-
-    //Calls a request to create a route for each category at startup of server
-    static async createCategoryRoutes(){
-        const categories = await DBAccess.findCategories();
-        for(let category of categories){
-            this.createCategoryRoute(category.name);
-        }
-    }
-
-    //Create the route
-    static createCategoryRoute(category){
-        //map the name of the category onto a unique string
-        //this is necessary because some characters entered by the user may not be usable in a URL
-        var route = '';
-        for(var i = 0; i < category.length; i++){
-            route += '-' + category.charCodeAt(i);
-        }
-        app.get(`/category/${route}`, async(req, res) => {
-            const products = await DBAccess.findProducts({category : category, visible : true});
-            res.render('category', {category : category, products : products});
-        });
     }
 }
 
@@ -230,7 +229,7 @@ class Main{
         this.sendData('loginAuthenticated', {success: correct}, socket);
     }
 
-    //If logged in for the first time, send that information to the user
+    //If logged in for the first time, send that information to the user, give them the appropriate cookie
     static loginAttempt(socket, data){
         if(data.username === privateData.adminUsername && data.password === privateData.adminPassword){
             this.sendData('loggedIn', data, socket);
@@ -285,7 +284,7 @@ class Main{
             WebScraper.findImage(data.name, data.category, 1);
         } else {
             
-            //If such a product exists but is removed, bring it back
+            //If such a product has been added but is now removed, bring it back
             if(product[0].visible === false){
                 this.sendData(`addProduct${data.category}`, data);
                 DBAccess.updateProduct(data, {visible : true, $inc : {imageIndex : 1}});
@@ -393,6 +392,7 @@ class WebScraper{
                 num : 1,
                 start : imageIndex,
                 searchType : 'image',
+                imgSize: 'medium',
                 key : privateData.APIkey,
                 cx : privateData.CSE
             }
