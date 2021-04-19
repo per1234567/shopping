@@ -6,7 +6,6 @@ class Error{
     static initialize(){
         this.errorMessage = document.getElementById('errorMessage');
     }
-
     //Display the error
     static throw(text){
         this.lastThrow = new Date();
@@ -14,12 +13,10 @@ class Error{
         this.errorMessage.innerText = text;
         setTimeout(() => {
             const now = new Date();
-
             //If a new error has not been thrown within the last 5 seconds, hide the error bar
             if(now - this.lastThrow >= 4990) this.hide();
         }, 5000);
     }
-
     //Hide the error
     static hide(){
         this.errorMessage.classList.remove('visible');
@@ -98,17 +95,13 @@ class CategoryScripts{
         //This object is responsible for allowing the program to detect globally when a text input is entered
         this.textInputValue = {
             value: '',
-            aListener: function(val) {},
-            set a(newValue) {
+            updateWaiter: function(val) {},
+            set newChange(newValue) {
               this.value = newValue;
-              this.aListener(newValue);
+              this.updateWaiter(newValue);
             },
-            get a() {
-              return this.value;
-            },
-            awaitUpdate: function(update) {
-              this.aListener = update;
-            }
+            get newChange() { return this.value; },
+            awaitUpdate: function(update) { this.updateWaiter = update; }
         }
 
         //Call methods in this class
@@ -123,7 +116,7 @@ class CategoryScripts{
         this.textInput.addEventListener('keyup', keyPress => {
             if(keyPress.key === 'Enter'){
                 this.inputWindow.style.display = 'none';
-                this.textInputValue.a = textInput.value;
+                this.textInputValue.newChange = textInput.value;
                 this.textInput.value = '';
             }
         });
